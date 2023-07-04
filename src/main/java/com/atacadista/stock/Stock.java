@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "stock")
+@Table(name = "stock", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Stock {
@@ -18,12 +18,12 @@ public class Stock {
 
     @MapsId("idEstablishment")
     @ManyToOne
-    @JoinColumn(name = "idEstablishment")
+    @JoinColumn(name = "idestablishment")
     public Establishment establishment;
 
     @MapsId("idProduct")
     @ManyToOne
-    @JoinColumn(name = "idProduct")
+    @JoinColumn(name = "idproduct")
     public Product product;
 
     public Integer quantity;

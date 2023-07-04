@@ -7,18 +7,23 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "idUser")
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "iduser")
     public int idUser;
 
     @ManyToOne
-    @JoinColumn(name = "IdEstablishment")
+    @JoinColumn(name = "idestablishment")
     public Establishment establishment;
+
+    @Column(name = "displayname")
     public String displayName;
+
+    @Column(name = "userrole")
     public UserRole userRole;
     public String username;
     public String password;

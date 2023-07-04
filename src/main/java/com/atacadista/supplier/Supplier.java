@@ -6,12 +6,13 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "suppliers")
+@Table(name = "suppliers", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "idSupplier")
 public class Supplier {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idsupplier")
     public Integer idSupplier;
     public String tradingName;
     public Long phone;
