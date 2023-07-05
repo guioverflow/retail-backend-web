@@ -1,6 +1,6 @@
 package com.atacadista.establishment;
 
-import com.atacadista.controller.AbstractController;
+import com.atacadista.controller.AbstractEntityController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("establishments")
-public class EstablishmentController extends AbstractController<EstablishmentRequestDTO, EstablishmentResponseDTO, Integer> {
+public class EstablishmentController extends AbstractEntityController<EstablishmentRequestDTO, EstablishmentResponseDTO, Integer> {
 
     @Autowired
     private EstablishmentRepository repository;

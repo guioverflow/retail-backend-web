@@ -1,10 +1,11 @@
 package com.atacadista.stock;
 
-import com.atacadista.controller.AbstractController;
+import com.atacadista.controller.AbstractRelationalController;
 import com.atacadista.establishment.Establishment;
 import com.atacadista.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("stock")
-public class StockController extends AbstractController<StockRequestDTO, StockResponseDTO, StockId> {
+public class StockController extends AbstractRelationalController<StockRequestDTO, StockResponseDTO, Integer, Integer> {
 
     @Autowired
     private StockRepository repository;
@@ -21,9 +22,11 @@ public class StockController extends AbstractController<StockRequestDTO, StockRe
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping
     @Override
-    public void insert(@RequestBody StockRequestDTO data) {
+    public StockResponseDTO insert(@RequestBody StockRequestDTO data) {
         Stock stockBean = new Stock(data);
-        repository.save(stockBean);
+        Stock savedStock = repository.save(stockBean);
+
+        return new StockResponseDTO(savedStock);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -36,9 +39,10 @@ public class StockController extends AbstractController<StockRequestDTO, StockRe
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @GetMapping("/{id}")
+    @GetMapping("/{idEstablishment}/{idProduct}")
     @Override
-    public StockResponseDTO selectById(@PathVariable StockId id) {
+    public StockResponseDTO selectById(@PathVariable Integer idEstablishment, @PathVariable Integer idProduct) {
+        StockId id = new StockId(idEstablishment, idProduct);
         Stock stockBean = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Registro de estoque nao encontrado: " + id
@@ -47,15 +51,22 @@ public class StockController extends AbstractController<StockRequestDTO, StockRe
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{idEstablishment}/{idProduct}")
     @Override
-    public void deleteById(@PathVariable StockId id) {
-        repository.deleteById(id);
+    public ResponseEntity<StockResponseDTO> deleteById(@PathVariable Integer idEstablishment, @PathVariable Integer idProduct) {
+        StockId id = new StockId(idEstablishment, idProduct);
+
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } return ResponseEntity.badRequest().build();
     }
 
-    @PutMapping("/{id}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @PutMapping("/{idEstablishment}/{idProduct}")
     @Override
-    public StockResponseDTO update(@PathVariable StockId id, @RequestBody StockRequestDTO stockRequestDTO) {
+    public StockResponseDTO update(@PathVariable Integer idEstablishment, @PathVariable Integer idProduct, @RequestBody StockRequestDTO stockRequestDTO) {
+        StockId id = new StockId(idEstablishment, idProduct);
         Stock stockBean = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Estoque não encontrado com ID: " + id

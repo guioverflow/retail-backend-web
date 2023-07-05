@@ -3,7 +3,7 @@ package com.atacadista.product;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.atacadista.controller.AbstractController;
+import com.atacadista.controller.AbstractEntityController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController extends AbstractController<ProductRequestDTO, ProductResponseDTO, Integer> {
+public class ProductController extends AbstractEntityController<ProductRequestDTO, ProductResponseDTO, Integer> {
 
     @Autowired
     private ProductRepository repository;

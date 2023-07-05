@@ -1,6 +1,6 @@
 package com.atacadista.user;
 
-import com.atacadista.controller.AbstractController;
+import com.atacadista.controller.AbstractEntityController;
 import com.atacadista.establishment.Establishment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("users")
-public class UserController extends AbstractController<UserRequestDTO, UserResponseDTO, Integer> {
+public class UserController extends AbstractEntityController<UserRequestDTO, UserResponseDTO, Integer> {
 
     @Autowired
     private UserRepository repository;

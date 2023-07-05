@@ -1,28 +1,25 @@
-package com.atacadista.saleProducts;
+package com.atacadista.orderProduct;
 
 
+import com.atacadista.order.Order;
 import com.atacadista.product.Product;
-import com.atacadista.sale.Sale;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "saleproducts", schema = "public")
+@Table(name = "orderproducts", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-public class SaleProduct {
+public class OrderProduct {
     @EmbeddedId
-    public SaleProductId id;
+    public OrderProductId id;
 
-    @MapsId("idSale")
+    @MapsId("idOrder")
     @ManyToOne
-    @JoinColumn(name = "idsale")
-    public Sale sale;
+    @JoinColumn(name = "idorder")
+    public Order order;
 
     @MapsId("idProduct")
     @ManyToOne
@@ -33,8 +30,8 @@ public class SaleProduct {
     public Float price;
 
 
-    public SaleProduct(SaleProductRequestDTO data) {
-        this.sale = new Sale( data.sale() );
+    public OrderProduct(OrderProductRequestDTO data) {
+        this.order = new Order( data.order() );
         this.product = new Product( data.product() );
         this.quantity = data.quantity();
         this.price = data.price();

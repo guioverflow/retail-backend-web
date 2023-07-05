@@ -10,15 +10,15 @@ Create table Establishments (
 -- Criação da tabela produtos
 CREATE TABLE Products (
 	IdProduct SERIAL PRIMARY KEY,
-    GTIN bigint,
-    Name varchar(200)
+    GTIN bigint NOT NULL,
+    Name varchar(200) NOT NULL
 );
 
 -- Criação da tabela de estoque
 CREATE TABLE Stock (
-    IdEstablishment int,
-    IdProduct int,
-    Quantity int,
+    IdEstablishment int NOT NULL,
+    IdProduct int NOT NULL,
+    Quantity int NOT NULL,
     PRIMARY KEY (IdEstablishment, IdProduct),
     FOREIGN KEY (IdEstablishment) REFERENCES Establishments (IdEstablishment),
     FOREIGN KEY (IdProduct) REFERENCES Products (IdProduct)
@@ -27,46 +27,39 @@ CREATE TABLE Stock (
 -- Criação da tabela usuários
 CREATE TABLE Users (
     IdUser SERIAL PRIMARY KEY,
-	IdEstablishment int,
-	UserRole varchar(100),
-	DisplayName varchar(100),
-    Username varchar(100),
-    Password varchar(200),
+	IdEstablishment int NOT NULL,
+	UserRole varchar(100) NOT NULL,
+	DisplayName varchar(100) NOT NULL,
+    Username varchar(100) NOT NULL,
+    Password varchar(200) NOT NULL,
 	FOREIGN KEY (IdEstablishment) REFERENCES Establishments (IdEstablishment)
 );
 
 -- Criação da tabela de vendas
 CREATE TABLE Sales (
     IdSale SERIAL PRIMARY KEY,
-    SaleDate date,
-    IdUser int,
+    SaleDate date NOT NULL,
+    IdUser int NOT NULL,
     FOREIGN KEY (IdUser) REFERENCES Users (IdUser)
-);
-
--- Criação da tabela de fornecedores
-CREATE TABLE Suppliers (
-    IdSupplier SERIAL PRIMARY KEY,
-    TradingName varchar(200),
-    Phone int,
-    Email varchar(200)
 );
 
 -- Criação da tabela de pedidos
 CREATE TABLE Orders (
     IdOrder SERIAL PRIMARY KEY,
-    OrderDate date,
-    IdUser int,
-    IdSupplier int,
+    OrderDate date NOT NULL,
+    IdUser int NOT NULL,
+	Approved bool,
+	IdManager int,
     FOREIGN KEY (IdUser) REFERENCES Users (IdUser),
-    FOREIGN KEY (IdSupplier) REFERENCES Suppliers (IdSupplier)
+	FOREIGN KEY (IdManager) REFERENCES Users (IdUser)
 );
 
 -- Criação da tabela associativa entre pedidos e produtos
 CREATE TABLE OrderProducts (
-    IdOrder int,
-    IdProduct int,
-    Quantity int,
-    Price decimal(10, 2),
+    IdOrder int NOT NULL,
+    IdProduct int NOT NULL,
+    Quantity int NOT NULL,
+    Price decimal(10, 2) NOT NULL,
     PRIMARY KEY (IdOrder, IdProduct),
     FOREIGN KEY (IdOrder) REFERENCES Orders (IdOrder),
     FOREIGN KEY (IdProduct) REFERENCES Products (IdProduct)
@@ -74,10 +67,10 @@ CREATE TABLE OrderProducts (
 
 -- Criação da tabela associativa entre vendas e produtos
 CREATE TABLE SaleProducts (
-    IdSale int,
-    IdProduct int,
-    Quantity int,
-    Price decimal(10, 2),
+    IdSale int NOT NULL,
+    IdProduct int NOT NULL,
+    Quantity int NOT NULL,
+    Price decimal(10, 2) NOT NULL,
     PRIMARY KEY (IdSale, IdProduct),
     FOREIGN KEY (IdSale) REFERENCES Sales (IdSale),
     FOREIGN KEY (IdProduct) REFERENCES Products (IdProduct)
@@ -171,3 +164,109 @@ INSERT INTO Users (IdEstablishment, DisplayName, UserRole, Username, Password) V
 (4, 'Camila Gomes', '3', 'camila.gomes', 'senha987'),
 (5, 'Gabriel Santos', '2', 'gabriel.santos', 'senha246'),
 (5, 'Isabela Lima', '3', 'isabela.lima', 'senha135');
+
+INSERT INTO Orders (OrderDate, IdUser, Approved, IdManager) VALUES
+('2023-07-01', 1, true, 2),
+('2023-07-01', 1, true, 2),
+('2023-07-02', 3, true, 4),
+('2023-07-02', 2, false, 4),
+('2023-07-02', 4, false, 1),
+('2023-07-02', 5, true, 3),
+('2023-07-03', 2, true, 1),
+('2023-07-03', 3, false, 4),
+('2023-07-03', 5, true, 3),
+('2023-07-04', 4, true, 2);
+
+INSERT INTO Sales (SaleDate, IdUser) VALUES
+('2023-07-01', 1),
+('2023-07-01', 2),
+('2023-07-02', 3),
+('2023-07-02', 4),
+('2023-07-02', 5),
+('2023-07-03', 2),
+('2023-07-03', 3),
+('2023-07-03', 4),
+('2023-07-03', 1),
+('2023-07-04', 5);
+
+INSERT INTO OrderProducts (IdProduct, IdOrder, Quantity, Price) VALUES
+(1, 1, 2, 9.99),
+(1, 3, 1, 19.99),
+(2, 2, 3, 15.99),
+(2, 4, 2, 7.99),
+(3, 1, 5, 9.99),
+(3, 2, 2, 15.99),
+(4, 3, 1, 19.99),
+(4, 4, 3, 7.99),
+(5, 1, 2, 9.99),
+(5, 3, 4, 19.99),
+(6, 2, 1, 15.99),
+(6, 4, 2, 7.99),
+(7, 1, 3, 9.99),
+(7, 3, 1, 19.99),
+(8, 2, 2, 15.99),
+(8, 4, 3, 7.99),
+(9, 1, 4, 9.99),
+(9, 3, 2, 19.99),
+(10, 2, 1, 15.99),
+(10, 4, 4, 7.99),
+(11, 1, 3, 9.99),
+(11, 3, 2, 19.99),
+(12, 2, 4, 15.99),
+(12, 4, 1, 7.99),
+(13, 1, 2, 9.99),
+(13, 3, 3, 19.99),
+(14, 2, 1, 15.99),
+(14, 4, 2, 7.99),
+(15, 1, 4, 9.99),
+(15, 3, 1, 19.99),
+(16, 2, 3, 15.99),
+(17, 1, 2, 9.99),
+(17, 3, 4, 19.99),
+(18, 2, 1, 15.99),
+(18, 4, 3, 7.99),
+(19, 1, 3, 9.99),
+(19, 3, 2, 19.99),
+(20, 2, 2, 15.99),
+(20, 4, 4, 7.99);
+
+INSERT INTO SaleProducts (IdProduct, IdSale, Quantity, Price) VALUES
+(1, 1, 2, 9.99),
+(1, 3, 1, 19.99),
+(2, 2, 3, 15.99),
+(2, 4, 2, 7.99),
+(3, 1, 5, 9.99),
+(3, 2, 2, 15.99),
+(4, 3, 1, 19.99),
+(4, 4, 3, 7.99),
+(5, 1, 2, 9.99),
+(5, 3, 4, 19.99),
+(6, 2, 1, 15.99),
+(6, 4, 2, 7.99),
+(7, 1, 3, 9.99),
+(7, 3, 1, 19.99),
+(8, 2, 2, 15.99),
+(8, 4, 3, 7.99),
+(9, 1, 4, 9.99),
+(9, 3, 2, 19.99),
+(10, 2, 1, 15.99),
+(10, 4, 4, 7.99),
+(11, 1, 3, 9.99),
+(11, 3, 2, 19.99),
+(12, 2, 4, 15.99),
+(12, 4, 1, 7.99),
+(13, 1, 2, 9.99),
+(13, 3, 3, 19.99),
+(14, 2, 1, 15.99),
+(14, 4, 2, 7.99),
+(15, 1, 4, 9.99),
+(15, 3, 1, 19.99),
+(16, 2, 3, 15.99),
+(17, 1, 2, 9.99),
+(17, 3, 4, 19.99),
+(18, 2, 1, 15.99),
+(18, 4, 3, 7.99),
+(19, 1, 3, 9.99),
+(19, 3, 2, 19.99),
+(20, 2, 2, 15.99),
+(20, 4, 4, 7.99);

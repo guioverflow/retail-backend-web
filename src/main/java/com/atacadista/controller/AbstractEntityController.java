@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-public abstract class AbstractController<requestType, responseType, identificator> {
+public abstract class AbstractEntityController<requestType, responseType, identificator> {
 
     // CREATE
     public abstract void insert(@RequestBody requestType data);
